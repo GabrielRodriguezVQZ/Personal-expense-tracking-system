@@ -1,7 +1,8 @@
+# Lists to store income and expense transactions
 incomes = []
 expenses = []
 
-
+# Add a new transaction to the corresponding list
 def add_transaction(transaction_type, amount, description):
     transaction = {"amount": amount, "description": description}
 
@@ -10,17 +11,17 @@ def add_transaction(transaction_type, amount, description):
     else:
         expenses.append(transaction)
 
-
+# Return all transactions separated by type
 def list_transactions():
     return incomes, expenses
 
-
+# Calculate total balance (income - expenses)
 def calculate_balance():
     total_income = sum(i["amount"] for i in incomes)
     total_expenses = sum(e["amount"] for e in expenses)
     return total_income - total_expenses
 
-
+# Delete a transaction by index
 def delete_transaction(transaction_type, index):
     data_list = incomes if transaction_type == "income" else expenses
 
@@ -29,7 +30,7 @@ def delete_transaction(transaction_type, index):
         return True
     return False
 
-
+# Edit an existing transaction
 def edit_transaction(transaction_type, index, amount, description):
     data_list = incomes if transaction_type == "income" else expenses
 
