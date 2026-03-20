@@ -37,13 +37,14 @@ This project was developed collaboratively using Git and Scrum methodology.
 ##  Project Structure
 
 ```
-project/
+personal-expenses-tracking-system/
 └─ src/
    ├─ main.py        # Program entry point
    ├─ menu.py        # User interaction menu
    ├─ services.py    # Business logic
-   └─ validations.py # Input validations
-  
+   └─  validations.py # Input validations
+
+```
 
 ---
 
