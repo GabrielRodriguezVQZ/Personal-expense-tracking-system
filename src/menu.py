@@ -65,7 +65,7 @@ def list_all():
             print(f"{i}. {t['amount']} - {t['description']}")
 
 
-# edit a transaction
+# edit a transaction (with optional fields)
 def edit():
     transaction_type = input("Edit income or expense?: ").lower()
 
@@ -80,6 +80,7 @@ def edit():
         print("No data")
         return
 
+    # show list
     for i, t in enumerate(data_list, 1):
         print(f"{i}. {t['amount']} - {t['description']}")
 
@@ -87,13 +88,26 @@ def edit():
     if index is None:
         return
 
-    amount = validate_amount(input("New amount: "))
-    if amount is None:
-        return
+    # current values
+    current = data_list[index]
 
-    description = validate_text(input("New description: "))
-    if description is None:
-        return
+    # optional amount
+    amount_input = input("New amount (leave empty to keep current): ")
+    if amount_input.strip() == "":
+        amount = current["amount"]
+    else:
+        amount = validate_amount(amount_input)
+        if amount is None:
+            return
+
+    # optional description
+    description_input = input("New description (leave empty to keep current): ")
+    if description_input.strip() == "":
+        description = current["description"]
+    else:
+        description = validate_text(description_input)
+        if description is None:
+            return
 
     if edit_transaction(transaction_type, index, amount, description):
         print("Edited successfully")
@@ -116,6 +130,7 @@ def delete():
         print("No data")
         return
 
+    # show list
     for i, t in enumerate(data_list, 1):
         print(f"{i}. {t['amount']} - {t['description']}")
 
