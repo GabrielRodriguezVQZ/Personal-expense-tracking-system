@@ -1,4 +1,4 @@
-#import functions from other modules
+# import functions from other modules
 from services import (
     add_transaction,
     list_transactions,
@@ -6,10 +6,11 @@ from services import (
     delete_transaction,
     edit_transaction
 )
-from validations import validate_amount
+
+from validations import validate_amount, validate_index, validate_text
 
 
-#show main menu options to user
+# show main menu options to user
 def show_menu():
     print("\n--- MENU ---")
     print("1. Register income")
@@ -21,7 +22,7 @@ def show_menu():
     print("0. Exit")
 
 
-#get user input for menu option
+# get user input for menu option
 def get_option():
     try:
         option = int(input("Select an option: "))
@@ -31,26 +32,21 @@ def get_option():
         return -1
 
 
-#register a new transaction
+# register a new transaction
 def register(transaction_type):
-    amount_input = input("Enter amount: ")
-    amount = validate_amount(amount_input)  # validate number
-
+    amount = validate_amount(input("Enter amount: "))
     if amount is None:
-        print("Invalid amount")
         return
 
-    description = input("Description: ")
-    if description.strip() == "":
-        print("Empty description")
+    description = validate_text(input("Description: "))
+    if description is None:
         return
 
-    #save transaction
     add_transaction(transaction_type, amount, description)
     print("Transaction registered")
 
 
-#show all transactions
+# show all transactions
 def list_all():
     incomes, expenses = list_transactions()
 
@@ -69,9 +65,13 @@ def list_all():
             print(f"{i}. {t['amount']} - {t['description']}")
 
 
-#edit a transaction
+# edit a transaction (with optional fields)
 def edit():
     transaction_type = input("Edit income or expense?: ").lower()
+
+    if transaction_type not in ["income", "expense"]:
+        print("Invalid type")
+        return
 
     incomes, expenses = list_transactions()
     data_list = incomes if transaction_type == "income" else expenses
@@ -80,37 +80,48 @@ def edit():
         print("No data")
         return
 
-    #show list
+    # show list
     for i, t in enumerate(data_list, 1):
         print(f"{i}. {t['amount']} - {t['description']}")
 
-    try:
-        index = int(input("Number to edit: ")) - 1
-    except:
-        print("Invalid input")
+    index = validate_index(input("Number to edit: "), len(data_list))
+    if index is None:
         return
 
-    #new values
-    amount = validate_amount(input("New amount: "))
-    if amount is None:
-        print("Invalid amount")
-        return
+    # current values
+    current = data_list[index]
 
-    description = input("New description: ")
-    if description.strip() == "":
-        print("Empty description")
-        return
+    # optional amount
+    amount_input = input("New amount (leave empty to keep current): ")
+    if amount_input.strip() == "":
+        amount = current["amount"]
+    else:
+        amount = validate_amount(amount_input)
+        if amount is None:
+            return
 
-    #update transaction
+    # optional description
+    description_input = input("New description (leave empty to keep current): ")
+    if description_input.strip() == "":
+        description = current["description"]
+    else:
+        description = validate_text(description_input)
+        if description is None:
+            return
+
     if edit_transaction(transaction_type, index, amount, description):
         print("Edited successfully")
     else:
         print("Invalid index")
 
 
-#delete a transaction
+# delete a transaction
 def delete():
     transaction_type = input("Delete income or expense?: ").lower()
+
+    if transaction_type not in ["income", "expense"]:
+        print("Invalid type")
+        return
 
     incomes, expenses = list_transactions()
     data_list = incomes if transaction_type == "income" else expenses
@@ -119,23 +130,20 @@ def delete():
         print("No data")
         return
 
-    #show list
+    # show list
     for i, t in enumerate(data_list, 1):
         print(f"{i}. {t['amount']} - {t['description']}")
 
-    try:
-        index = int(input("Number to delete: ")) - 1
-    except:
-        print("Invalid input")
+    index = validate_index(input("Number to delete: "), len(data_list))
+    if index is None:
         return
 
-    #remove transaction
     if delete_transaction(transaction_type, index):
         print("Deleted successfully")
     else:
         print("Invalid index")
 
 
-#show total balance
+# show total balance
 def show_balance():
     print("Total balance:", calculate_balance())
