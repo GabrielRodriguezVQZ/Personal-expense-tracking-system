@@ -27,8 +27,3 @@ def validate_index(value, max_length):
 def validate_text(text):
     cleaned = text.strip()
     return cleaned if cleaned else None
-
-
-def validate_type(value):
-    value = value.lower().strip()
-    return value if value in ["income", "expense"] else None
