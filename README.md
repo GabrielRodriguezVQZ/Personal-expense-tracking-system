@@ -35,12 +35,15 @@ This project was developed collaboratively using Git and Scrum methodology.
 ---
 
 ##  Project Structure
-src/
-├─ main.py          # Program entry point
-├─ menu.py          # User interaction menu
-├─ services.py      # Business logic
-├─ validations.py   # Input validations
-├─ models.py        # Data structures
+
+```
+project/
+└─ src/
+   ├─ main.py        # Program entry point
+   ├─ menu.py        # User interaction menu
+   ├─ services.py    # Business logic
+   └─ validations.py # Input validations
+  
 
 ---
 
